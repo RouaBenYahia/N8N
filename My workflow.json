@@ -1,0 +1,146 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        0
+      ],
+      "id": "19d6d40f-1d60-4922-b22e-43e655db1996",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1iJeeubaiqi0WTZ-pmh2oYv8BSMLSf7N2sRVkUf4TeOA/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1iJeeubaiqi0WTZ-pmh2oYv8BSMLSf7N2sRVkUf4TeOA/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "83ac316a-c7b8-45b0-a259-866b1a6e314e",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "I23Qt7fuaDrfG9F3",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "rouabenyahia500@gmail.com",
+          "mode": "list",
+          "cachedResultName": "rouabenyahia500@gmail.com"
+        },
+        "start": "={{ $json.Date.split('/').reverse().join('-') + 'T' + $json['Horaire-Début'] }}",
+        "end": "={{ $json.Date.split('/').reverse().join('-') + 'T' + $json['Horaire-Fin '] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        -160
+      ],
+      "id": "e6576cbf-e91a-4f7e-8cc5-9065e45b6cc1",
+      "name": "Create an event1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "l9wquveLXPu3wVfI",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "https://app.slack.com/client/T04BN9NGXB7/C04BAMEU6S3",
+          "mode": "url"
+        },
+        "text": "=Vous avez un rendez-vous {{$json[\"Nom\"]}} le {{$json[\"Date\"]}} du {{$json[\"Horaire-Début\"]}} à {{$json[\"Horaire-Fin \"]}} pour {{$json[\"Cause\"]}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        160,
+        80
+      ],
+      "id": "e7cb7d80-6893-48a9-acf6-3bcc7659c2e1",
+      "name": "Send a message",
+      "webhookId": "92e76b5f-a999-4280-874c-e7f62ea6ace1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "slackApi": {
+          "id": "ybz5HcBJ0Wg21OXc",
+          "name": "Slack account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Create an event1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "96f47656-2051-4955-b785-d141fa771d1e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7f367941d63875f6bf14365694f0d1ae15914ff08bca1aefebd3d5f5fdabab94"
+  },
+  "id": "fPZfsCyAXG0XMedJ",
+  "tags": []
+}
